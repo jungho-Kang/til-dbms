@@ -1,127 +1,97 @@
-# 데이터베이스 모델링
+# 데이터베이스 모델링 및 ERD 및 MySQL 활용하기
 
-## 1. DB(데이터 베이스)와 DB 관리 시스템(DBMS)은 다른 개념이다
+- MySQL (DBMS 8.x)
+  - RDBMS를 다룬다 (Relation : 관계)
 
-- DB : 데이터를 저장하는 공간
-- DBMS : DB를 관리하는 시스템
+## 1. 요구사항 분석
 
-## 2. 데이터베이스 모델링
+- 회의 참석 (회의록)
+- 회의록 검토 후 각 사항을 요구사항 분석 (요구사항 정의서, 업무 지시서)
 
-- 데이터베이스 모델링 : 데이터베이스를 설계하는 과정
-- 데이터를 잘 분류해서 저장하는 방안을 고려하는 과정
-- 잘 분류해두면 데이터를 쉽게 찾을 수 있다
-- 잘 분류해두면 데이터를 쉽게 삭제할 수 있다
-- 잘 분류해두면 데이터를 쉽게 수정할 수 있다
+## 2. 요구사항 분석을 하는 이유
 
-## 3. 데이터베이스 모델링에서 최종 목적
+- 각 내용의 속성을 찾고 분류
+- 분류된 내용을 모아서 Entity 생성
+- Entity 사이의 관계를 찾는다
+- 요구사항 정의서 작성
 
-- 데이터의 중복을 제거한다
-- 데이터의 무결성을 보장한다
-- 데이터의 일관성을 보장한다
+### 2.1. 요구사항 분석 예
 
-## 4. 우리는 관계(Relation)형태의 데이터베이스를 사용합니다
+- 고객은 고객코드, 고객명, 전화번호, 이메일, 주소(기본주소, 상세주소), 지역, 가입일로 되어있다
+- 고객은 지역별로 관리되도록 한다
+- 지역은 지역코드와 지역명으로 되어 있고 지역명은 대한민국의 지역코드 (02:서울특별시)를 이용한다
+- 한 지역에는 여러 고객이 있을 수 있다
+- 제품은 제품코드, 제품명, 제품색상, 가격으로 되어있다
+- 하나의 제품은 여러 색상을 가질 수가 있다
+- 고객은 등록된 제품을 구매 할 수 있다
+- 한 명의 고객은 여러 제품을 구매 할 수 있고, 하나의 제품은 여러 고객이 구매 할 수 있다
+- 고객이 제품을 구매 시 구매수량과 구매일자를 기록한다
 
-- RDBMS(관계형 데이터베이스 관리 시스템)
-- 관계형 데이터베이스는 테이블(Table)로 구성된다
-- 테이블은 행(Row)과 열(Column)로 구성된다
-- 행은 레코드(Record)라고도 한다
-- 열은 필드(Field)라고도 한다
-- MySQL, Oracle, MSSQL, PostgreSQL, MariaDB 등이 있다
+### 2.2. 요구사항 정의서 또는 업무 기술서 (회사마다 포맷이 다르다)
 
-## 5. 데이터베이스 모델링 과정
+![Image](https://github.com/user-attachments/assets/06dae24b-8245-4b54-ad06-1e8b3642d36f)
 
-### 5.1 요구사항 분석
+### 2.3. 속성(Attribute) 찾기 후 Entity 정의하기
 
-- 서비스 기획 참석 이후
-- 문장으로 된 다양한 서비스 내용에 대해서 우선 대표적 속성(Attribute)을 추출해 낸다
-- 요구사항 정의서를 작성한다
-- 추출된 속성(Attribute)들을 묶어서 하나의 개체(Entity)로 분류한다
-- 개체(Entity) 간의 관계(Relation)을 찾는다
-- 이러한 개체(Entity)들을 묶어서 하나의 스키마(Schema)로 분류한다
+- DB 설계 전문가는 Entity 정의 후 속성을 선별해 나간다
+- 신입 DB 설계자는 Attribute 선별 후 Entity를 정의함
 
-### 5.2 개념적 데이터 모델링
+#### 2.3.1. 먼저 Entity 항목정리
 
-- ERD : Entity Relationship Diagram
+- 명사 소문자 추천
 
-### 5.3 논리적 데이터 모델링
+![Image](https://github.com/user-attachments/assets/8f911e14-740f-4367-a86e-7c47f1c12f14)
 
-- Excel 활용 및 PK(Primary Key), FK(Foreign Key), Relation Model 만들기
+#### 2.3.2. Entity 사이의 관계정리
 
-### 5.4 물리적 데이터 모델링
+- 동사 소문자 추천
 
-- 테이블 정의서, SQL Script 최종 생성
+![Image](https://github.com/user-attachments/assets/76533446-4416-4d77-97ae-c8bb43cdb881)
 
-### 5.5. 데이터베이스 구축
+## 3. ERD 그리기
 
-- Reverse Engineering
-- Forward Engineering
+### 3.1. 개념적 모델링
 
-## 6. 데이터베이스 모델링 실습
-
-### 6.1. 핵심 `중복되는 데이터 제거` 하세요
-
-- Schema 폴더 생성하기
-  - 소문자 폴더로 저장합니다
-- Entity(객체) 파일로 table 생성함
-  - 소문자s(복수형)로 생성했습니다
-- 속성(Attribute) 생성함
-  - 소문자로 칼럼(column)명을 생성함
-- 속성중 PK
-  - 절대 중복되지 않는 조건
-  - 자동증가 또는 유니크 속성을 부여하여야 함
-  - 자동증가는 auto increment 속성을 부여하여야 함
-  - 유니크 속성은 uuid 속성을 부여하여야 함
-- 속성중 FK
-  - 외래키 속성을 부여하여야 함
-  - 다른 테이블 즉, 엔티티와 관계를 연결시키는 키
-  - 일반적으로 다른 테이블의 PK가 연결된다
-
-### 6.2. 핵심 `데이터의 내용은 1개여야 한다`
-
-- 레코드 즉 입력되어 있는 데이터가 만약 여러 개라면
-  - 데이터를 하나씩 배치하여서 FK로 연결 시켜본다
-  - 만약 FK가 여러 개 배치된다면
-  - 새로운 표를 생성해 보고, 각 FK를 통해서 연결 시켜보자
-
-### 6.3. 대응수 알아보기
-
-- 꼭 엑셀을 만들지 않더라도 대응수를 파악할 수 있다
-- 대응수란 하나의 테이블이 다른 테이블의 FK를 활용하는 것을 나타내는 기호다
-- `1 : 1` 구조
-- `1 : N` 구조
-- `N : M` 구조
-
-#### 대응수 알아내기 요령
-
-- A와 B의 관계
-- A는 B를 ~~~한다
-- B는 A에 의해 ~~~된다
-- `하나`의 A는 `한 개/여러 개`의 B를 ~~한다
-- `하나`의 B는 `한 개/여러 개`의 A에 의해 ~~된다
-
-#### 6.3.1. `1 : N 구조`
-
-- `회원`과 `이메일`의 관계를 파악해보자
-- 회원은 이메일을 소유한다
-- 이메일은 회원에 의해 소유된다
-- `하나`의 회원은 `여러 개`의 이메일을 소유한다 (1 : N)
-- `하나`의 이메일은 `한 명의` 회원에 의해 소유된다 (1 : 1)
-
-- 최종적으로 `회원 : 이메일 = 1 : N` 이다
-- N쪽에 FK를 생성한다
-
-#### 6.3.2. `N : M 구조`
-
-- `학생`과 `과목`의 관계
-- `학생`은 `과목`을 수강한다
-- `과목`은 `학생`에 의해 수강된다
-
-- `한 명`의 `학생`은 `여러 개`의 `과목`을 수강한다 (1 : N)
-- `하나`의 `과목`은 `여러 명`의 `학생`에 의해 수강된다 (1 : N)
-- 최종적으로 `학생 : 과목 = N : M` 이다
-- 무조건 table 생성하고 FK를 모은다
-
-### 6.4. ERD 그리기
-
+- E-R 다이어그램(Entity-Relationship-Diagram)
 - https://app.diagrams.net/
-- https://www.erdcloud.com/
+
+![Image](https://github.com/user-attachments/assets/109183c8-ee0e-402b-9688-50b3e8db5d02)
+
+- 고객
+
+![Image](https://github.com/user-attachments/assets/f41b7fb7-64b9-4021-8055-7dc76a1fa495)
+
+- 고객 PK 후보
+
+![Image](https://github.com/user-attachments/assets/7f635a08-a141-480b-8200-af64e17c6263)
+
+- 지역
+
+![Image](https://github.com/user-attachments/assets/20041eaf-5eb6-4095-9a8f-82bfcb001bb8)
+
+- 제품
+
+![Image](https://github.com/user-attachments/assets/fd02f402-06cc-4070-880a-e37f5d5e15cd)
+
+### 3.2. Relation 표현하기
+
+- 개체와 개체가 맺고 있는 연관성을 표현
+
+![Image](https://github.com/user-attachments/assets/d6cfe638-56ae-44aa-bb58-bf4282181965)
+
+#### 고객은 제품을 구매한다
+
+![Image](https://github.com/user-attachments/assets/9681cad5-2925-4dbe-83d5-5ac86455778c)
+![Image](https://github.com/user-attachments/assets/94ddaaa1-1f6c-4fa7-b365-6e5defe6d76a)
+
+## 4. Logical Data Modeling(논리적 모델링)
+
+- 개념적 스키마를 표 형식 또는 테이블 형식으로 표현함
+- Entity의 속성 데이터 타입, 길이, null 허용여부, 기본값, 제약 조건등을 세부적으로 작성 후 문서화
+- 즉 `테이블정의서`를 생성함 (도구는 다양합니다)
+
+![Image](https://github.com/user-attachments/assets/9cb8ee4e-bfb8-4c35-bb58-0ff55efee5b3)
+
+## MySQL 설치
+
+- https://dev.mysql.com/downloads/installer/
